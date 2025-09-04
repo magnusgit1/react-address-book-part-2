@@ -18,9 +18,14 @@ function ContactView() {
         return <p>Loading...</p>
     }
 
-    const loc = [
+    let loc = [
         { lat: contact.latitude, lng: contact.longitude }
     ]
+
+    // dummy value for newly created contacts
+    if (!contact.latitude || contact.latitude === null) {
+        loc = [ { lat: "24.3", lng: "92.1"} ]
+    }
     
     return (
         <>
@@ -31,7 +36,7 @@ function ContactView() {
                 <div className="contact-extra-details">
                     <Contact contact={contact} showDetails={true}/>
                     <Link to="/dashboard">Return to dashboard</Link>
-                </div>
+                </div> 
                 <div className="map">
                     <h2 style={{textAlign: "center"}}>Location</h2>
                     <Map locations={loc} />

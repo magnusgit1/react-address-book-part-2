@@ -64,5 +64,15 @@ hr {
 }
 
 .contact-box h2 {
-    text-align: center;
+    text-align: left;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    padding:10px;
+}
+
+.contact-form button {
+    margin-top:10px;
 }
