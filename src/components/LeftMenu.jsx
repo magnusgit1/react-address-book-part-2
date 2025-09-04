@@ -1,7 +1,11 @@
  
 import { Link } from 'react-router-dom'
+import { useContext } from 'react'
+import { DisplayContext } from '../App.jsx'
 
-function LeftMenu({ displayForm, setDisplayForm }){
+function LeftMenu(){
+
+    const { displayForm , setDisplayForm } = useContext(DisplayContext)
 
     const onCreateContact = () => {
         setDisplayForm(!displayForm)
@@ -11,7 +15,8 @@ function LeftMenu({ displayForm, setDisplayForm }){
         <>
         <div className="left-menu">
             <h2>Menu</h2>
-            <Link to="/welcome">Home</Link>
+            <hr/>
+            <Link to="/welcome" style={{paddingBottom:"10px"}}>Home</Link>
             <button onClick={onCreateContact}>Create new contact</button>
         </div>
         </>

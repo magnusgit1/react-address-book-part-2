@@ -1,18 +1,19 @@
 
-import { useState } from 'react'
+import { DisplayContext } from '../App.jsx' 
+import { useContext } from 'react'
 import LeftMenu from './LeftMenu.jsx'
 import ContactList from './ContactList'
 import ContactForm from './ContactForm.jsx'
 
 function Dashboard() {
 
-    const [displayForm, setDisplayForm] = useState(false)
+    const { displayForm } = useContext(DisplayContext)
 
     return (
         <>
         <div className="dashboard">
-            <LeftMenu displayForm={displayForm} setDisplayForm={setDisplayForm}/>
-            {displayForm ? <ContactForm  setDisplayForm={setDisplayForm}/> : <ContactList/>}
+            <LeftMenu />
+            {displayForm ? <ContactForm/> : <ContactList/>}
         </div>
         </>
     )

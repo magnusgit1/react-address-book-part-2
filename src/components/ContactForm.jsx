@@ -1,37 +1,80 @@
 
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { DisplayContext, DataContext } from '../App.jsx'
+import { useNavigate } from 'react-router'
 
-function ContactForm({ setDisplayForm }) {
+function ContactForm() {
 
-    const [contact, setContact] = useState({
+    const { setDisplayForm } = useContext(DisplayContext)
+    const { data } = useContext(DataContext)
+    const navigate = useNavigate()
+
+    const id = localStorage.getItem('id')
+    const contactToUpdate = data.find((x) => x.id === Number(id))
+
+    const init = contactToUpdate ? {
+        firstName: contactToUpdate.firstName,
+        lastName: contactToUpdate.lastName,
+        street: contactToUpdate.street,
+        city: contactToUpdate.street
+    } : { 
         firstName: '',
         lastName: '',
         street: '',
         city: ''
-    });
+    }
+
+    const [contact, setContact] = useState(init)
+        
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        try {
-            const response = await fetch(localStorage.getItem('url'), {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(contact)
-            })
+        if (contactToUpdate) {
+            try {
+                const response = await fetch(localStorage.getItem('url') + `/${localStorage.getItem('id')}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(contact)
+                })
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const result = await response.json()
+                console.log('Success:', result)
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
+                setDisplayForm(false)
+                setContact({...contact, firstName:'', lastName:'', street:'', city:''})
+                localStorage.removeItem('id')
+                navigate(`/contact/${id}`)
+                
+            } catch (error) {
+                console.error('Error:', error)
             }
-            const result = await response.json()
-            console.log('Success:', result)
 
-            setDisplayForm(false)
-            setContact({...contact, firstName:'', lastName:'', street:'', city:''})
-
-        } catch (error) {
-            console.error('Error:', error)
+        } else {
+            try {
+                const response = await fetch(localStorage.getItem('url'), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(contact)
+                })
+    
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const result = await response.json()
+                console.log('Success:', result)
+    
+                setDisplayForm(false)
+                setContact({...contact, firstName:'', lastName:'', street:'', city:''})
+    
+            } catch (error) {
+                console.error('Error:', error)
+            }
         }
     }
 
